@@ -24,7 +24,10 @@ public class Main {
          BufferedReader reader = new BufferedReader(new InputStreamReader(input));
          String line =reader.readLine();
          String[] httpRequest = line.split(" ",  0);
-         if(httpRequest[1] == "/"){
+         System.out.println(line);
+         System.out.println(httpRequest[1]);
+         httpRequest[1] = httpRequest[1].strip();
+         if(httpRequest[1].equals("/")){
              outputStream.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
              System.out.println("Accepted new connection and responded.");
          }else {
