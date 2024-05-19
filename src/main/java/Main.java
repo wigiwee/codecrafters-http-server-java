@@ -28,7 +28,7 @@ public class Main {
              outputStream.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
              System.out.println("Accepted new connection and responded.");
          }else {
-             outputStream.write("HTTP/1.1 404 NOT FOUND\r\n\r\n".getBytes());
+             outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
              System.out.println("Rejected the bad connection.");
          }
 
