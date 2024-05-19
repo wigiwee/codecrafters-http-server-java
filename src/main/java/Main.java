@@ -1,4 +1,4 @@
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -16,10 +16,22 @@ public class Main {
        serverSocket = new ServerSocket(4221);
        serverSocket.setReuseAddress(true);
        clientSocket = serverSocket.accept(); // Wait for connection from client.
-       System.out.println("accepted new connection");
-       clientSocket.getOutputStream().write(
-               "HTTP/1.1 200 OK\r\n\r\n".getBytes()
-       );
+//       clientSocket.getOutputStream().write(
+//               "HTTP/1.1 200 OK\r\n\r\n".getBytes()
+//       );
+         OutputStream outputStream = clientSocket.getOutputStream();
+         InputStream input = clientSocket.getInputStream();
+         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+         String line =reader.readLine();
+         String[] httpRequest = line.split(" ",  0);
+         if(httpRequest[1] == "/"){
+             outputStream.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+             System.out.println("Accepted new connection and responded.");
+         }else {
+             outputStream.write("HTTP/1.1 404 NOT FOUND\r\n\r\n".getBytes());
+             System.out.println("Rejected the bad connection.");
+         }
+
      } catch (IOException e) {
        System.out.println("IOException: " + e.getMessage());
      }
