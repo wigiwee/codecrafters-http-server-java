@@ -35,7 +35,6 @@ public class Main {
              System.out.println("Accepted new connection and responded.");
          }else if(httpRequest[1].equals("/user-agent")){
              reader.readLine();
-             reader.readLine();
              String userAgentValue = reader.readLine().split(" ", 0)[1];
              String response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\n"+userAgentValue;
              outputStream.write(response.getBytes());
