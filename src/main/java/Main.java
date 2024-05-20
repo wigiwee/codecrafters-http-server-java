@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class Main {
   public static void main(String[] args) {
@@ -32,6 +33,12 @@ public class Main {
          }else if(httpRequest[1].equals("/")){
              outputStream.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
              System.out.println("Accepted new connection and responded.");
+         }else if(httpRequest[1].equals("/user-agent")){
+             reader.readLine();
+             reader.readLine();
+             String userAgentValue = reader.readLine().split(" ", 0)[1];
+             String response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\n"+userAgentValue;
+             outputStream.write(response.getBytes());
          }else {
              outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
              System.out.println("Rejected the bad connection.");
