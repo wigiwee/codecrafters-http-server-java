@@ -25,16 +25,17 @@ public class Main {
          String line =reader.readLine();
          String[] httpRequest = line.split(" ",  0);
          System.out.println(line);
-         System.out.println(httpRequest[1]);
-         httpRequest[1] = httpRequest[1].strip();
-         if(httpRequest[1].equals("/")){
+         if(httpRequest[1].startsWith("/echo/")){
+             String param = httpRequest[1].substring(6);
+             String response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: "+param.length()+"\r\n\r\n"+param;
+             outputStream.write(response.getBytes());
+         }else if(httpRequest[1].equals("/")){
              outputStream.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
              System.out.println("Accepted new connection and responded.");
          }else {
              outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
              System.out.println("Rejected the bad connection.");
          }
-
      } catch (IOException e) {
        System.out.println("IOException: " + e.getMessage());
      }
