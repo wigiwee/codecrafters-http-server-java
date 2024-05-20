@@ -36,7 +36,7 @@ public class Main {
          }else if(httpRequest[1].equals("/user-agent")){
              reader.readLine();
              String userAgentValue = reader.readLine().split(" ", 0)[1];
-             String response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\n"+userAgentValue;
+             String response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: "+userAgentValue.length()+"\r\n\r\n"+userAgentValue;
              outputStream.write(response.getBytes());
          }else {
              outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
