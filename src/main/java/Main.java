@@ -102,7 +102,7 @@ class HttpRequestHandler{
                         writer.write(reader.read());
                     }
                 }
-                String response ="HTTP/1.1 200 File Created\r\n\r\n";
+                String response ="HTTP/1.1 201 File Created\r\n\r\n";
                 clientSocket.getOutputStream().write(response.getBytes());
             } else {
                 outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
