@@ -54,11 +54,15 @@ class HttpRequestHandler{
             //routing
             if(httpRequest[1].startsWith("/echo/")){
                 String param = httpRequest[1].substring(6);
-                reader.readLine();
-                reader.readLine();
-                String encodingHeader = reader.readLine().split(" ", 0)[1];
+                String header, value;
+                do{
+                    var x = reader.readLine().split(" ", 0);
+                    header= x[0];
+                    value = x[1];
+
+                }while(!header.equals("Accept-Encoding:"));
                 String response;
-                if(encodingHeader.equals("gzip")){
+                if(value.equals("gzip")){
                     response = "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\n\rContent-Type: text/plain\r\nContent-Length: "
                             +param.length()+"\r\n\r\n"+param;
                 }else {
