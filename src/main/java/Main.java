@@ -58,8 +58,11 @@ class HttpRequestHandler{
                 do{
                     var x = reader.readLine().split(" ", 0);
                     header= x[0];
+                    if(header.equals("")){
+                        break;
+                    }
                     value = x[1];
-                }while(!header.equals("Accept-Encoding:") &&  !header.equals(""));
+                }while(!header.equals("Accept-Encoding:") );
                 String response;
                 if(value.equals("gzip")){
                     response = "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: "
