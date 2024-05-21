@@ -54,7 +54,7 @@ class HttpRequestHandler{
             //routing
             if(httpRequest[1].startsWith("/echo/")){
                 String param = httpRequest[1].substring(6);
-                String header, value;
+                String header, value=null;
                 do{
                     var x = reader.readLine().split(" ", 0);
                     header= x[0];
