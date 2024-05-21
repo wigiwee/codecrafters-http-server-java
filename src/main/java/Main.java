@@ -66,7 +66,7 @@ class HttpRequestHandler{
                     response = "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: "
                             +param.length()+"\r\n\r\n"+param;
                 }else {
-                    response = "HTTP/1.1 200 OK\r\nContent-Encoding: invalid-encoding\r\nContent-Type: text/plain\r\nContent-Length: "
+                    response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: "
                             +param.length()+"\r\n\r\n"+param;
                 }
                 System.out.println("[RESPONSE] "+response);
