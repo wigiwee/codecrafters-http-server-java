@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,15 +11,21 @@ public class Main {
 
         ServerSocket serverSocket = null;
         Socket clientSocket = null;
-
+        String directory = null;
+        if(args.length == 2){
+            if(args[0].equals("--directory")){
+                directory = args[1];
+            }
+        }
 
         try {
             serverSocket = new ServerSocket(4221);
             serverSocket.setReuseAddress(true);
             while(true){
                 clientSocket = serverSocket.accept(); // Wait for connection from client.
-                HttpRequestHandler requestHandler = new HttpRequestHandler(clientSocket);
+                HttpRequestHandler requestHandler = new HttpRequestHandler(clientSocket, directory );
                 Thread.startVirtualThread(requestHandler::run);
+
             }
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
@@ -27,11 +34,17 @@ public class Main {
 }
 class HttpRequestHandler{
     Socket clientSocket;
-    public HttpRequestHandler(Socket clientSocket){
+    String directory;
+
+    public HttpRequestHandler(Socket clientSocket, String directory){
         this.clientSocket = clientSocket;
+        this.directory = directory;
     }
     public void run(){
         try{
+            if(directory != null){
+                System.out.println("Directory: "+ directory);
+            }
             OutputStream outputStream = clientSocket.getOutputStream();
             InputStream input = clientSocket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -60,7 +73,24 @@ class HttpRequestHandler{
                 outputStream.write(response.getBytes());
                 System.out.println("[RESPONSE] "+ response);
 
-            }else {
+            } else if (httpRequest[1].equals("/files/")) {
+                String filename = httpRequest[1].substring(7);
+                File file = new File(directory, filename);
+
+                if(file.exists()) {
+                    byte[] fileContents = Files.readAllBytes(file.toPath());
+                    String fileContentString = new String(fileContents);
+                    String response = "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: "
+                            + fileContentString.length() + "\r\n\r\n" + fileContentString;
+                    System.out.println("[RESPONSE] "+ response);
+                    outputStream.write(response.getBytes());
+                }else {
+                    String response = "HTTP/1.1 404 Not Found\r\n\r\n";
+                    System.out.println("[RESPONSE] "+ response);
+                    outputStream.write(response.getBytes());
+                }
+                
+            } else {
                 outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
                 System.out.println("[ERROR] unknown route.");
             }
