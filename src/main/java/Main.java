@@ -73,7 +73,7 @@ class HttpRequestHandler{
                 outputStream.write(response.getBytes());
                 System.out.println("[RESPONSE] "+ response);
 
-            } else if (httpRequest[1].equals("/files/")) {
+            } else if (httpRequest[1].startsWith("/files/")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
 
