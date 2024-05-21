@@ -54,8 +54,17 @@ class HttpRequestHandler{
             //routing
             if(httpRequest[1].startsWith("/echo/")){
                 String param = httpRequest[1].substring(6);
-                String response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: "
-                        +param.length()+"\r\n\r\n"+param;
+                reader.readLine();
+                reader.readLine();
+                String encodingHeader = reader.readLine().split(" ", 0)[1];
+                String response;
+                if(encodingHeader.equals("gzip")){
+                    response = "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\n\rContent-Type: text/plain\r\nContent-Length: "
+                            +param.length()+"\r\n\r\n"+param;
+                }else {
+                    response = "HTTP/1.1 200 OK\r\nContent-Encoding: invalid-encoding\n\rContent-Type: text/plain\r\nContent-Length: "
+                            +param.length()+"\r\n\r\n"+param;
+                }
                 System.out.println("[RESPONSE] "+response);
                 outputStream.write(response.getBytes());
 
@@ -103,6 +112,7 @@ class HttpRequestHandler{
                     }
                 }
                 String response ="HTTP/1.1 201 Created\r\n\r\n";
+                System.out.println("[RESPONSE] "+ response);
                 clientSocket.getOutputStream().write(response.getBytes());
             } else {
                 outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
