@@ -8,7 +8,7 @@ class HttpRequestHandler{
     Socket clientSocket;
     String directory;
     String EOL = "\r\n";
-    String[] headers= new String[20];
+    String[] headers= new String[100];
 
     public HttpRequestHandler(Socket clientSocket, String directory){
         this.clientSocket = clientSocket;
@@ -98,10 +98,10 @@ class HttpRequestHandler{
         while(reader.ready()){
             j = 1;
             line = reader.readLine();
-            if(line.equals("\r\n")){
+            temp = line.split(" ");
+            if(line.equals("")){
                 return;
             }
-            temp = line.split(" ");
             if(temp.length == 1){
                 continue;
             }
