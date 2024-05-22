@@ -168,7 +168,7 @@ class HttpRequestHandler{
 
                 //we check whether the file name given in the request is present in out directory,
                 // if it is then we send the file
-            } else if (httpRequest[1].startsWith("/files") && httpRequest[0].equals("GET")) {
+            } else if (httpRequest[1].startsWith("/files/") && httpRequest[0].equals("GET")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
 
