@@ -94,9 +94,14 @@ class HttpRequestHandler{
         String[] temp ;
         int i = 0;
         int j;
+        String line;
         while(reader.ready()){
             j = 1;
-            temp = reader.readLine().split(" ");
+            line = reader.readLine();
+            if(line.equals(EOL)){
+                return;
+            }
+            temp = line.split(" ");
             if(temp.length == 1){
                 continue;
             }
