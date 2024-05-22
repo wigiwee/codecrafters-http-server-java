@@ -82,7 +82,7 @@ class HttpRequestHandler{
 
     }
 
-    public void  setHeaders(BufferedReader reader) tGEThrows IOException {
+    public void  setHeaders(BufferedReader reader) throws IOException {
         String[] temp ;
         int i = 0;
         int j;
@@ -118,7 +118,7 @@ class HttpRequestHandler{
         int i = 0;
         while(!headers[i].equals(name)){
             i = i+2;
-            if(headers[i] == ""){
+            if(headers[i].equals("")){
                 return headers[i];
             }
         }
