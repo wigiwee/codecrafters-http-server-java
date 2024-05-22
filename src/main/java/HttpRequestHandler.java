@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.zip.GZIPOutputStream;
 
 class HttpRequestHandler{
@@ -25,7 +26,7 @@ class HttpRequestHandler{
         } catch (IOException e) {
             return fileContent;
         }
-        
+
     }
 
     public String getHeader(String name){
@@ -128,7 +129,7 @@ class HttpRequestHandler{
             String[] httpRequest = line.split(" ",  0);
             System.out.println("[REQUEST] "+line);
             setHeaders(reader);
-
+            System.out.println(Arrays.toString(headers));
             //routing
             if(httpRequest[1].startsWith("/echo/")){
                 String param = httpRequest[1].substring(6);
