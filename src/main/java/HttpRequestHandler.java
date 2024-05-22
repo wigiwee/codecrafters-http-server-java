@@ -98,7 +98,7 @@ class HttpRequestHandler{
         while(reader.ready()){
             j = 1;
             line = reader.readLine();
-            if(line.equals(EOL)){
+            if(line.equals("\r\n")){
                 return;
             }
             temp = line.split(" ");
