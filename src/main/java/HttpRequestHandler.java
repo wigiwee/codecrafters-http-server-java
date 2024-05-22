@@ -192,6 +192,7 @@ class HttpRequestHandler{
                 }
 
             } else if (requestTarget[1].equals("files") && httpRequest[0].equals("POST")) {
+                System.out.println("here");
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
                 try (var writer = new FileWriter(file)){
