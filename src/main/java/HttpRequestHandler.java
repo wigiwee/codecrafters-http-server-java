@@ -167,7 +167,7 @@ class HttpRequestHandler{
                     );
                 }
 
-            }else if(requestTarget[0].equals("/")){
+            }else if(httpRequest[0].equals("/") ){
                 sendResponse(outputStream, 200, "OK");
 
             }else if(requestTarget[1].equals("/user-agent")){
@@ -178,7 +178,6 @@ class HttpRequestHandler{
             } else if (requestTarget[1].equals("files") && httpRequest[0].equals("GET")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
-                System.out.println("Here");
                 if(file.exists()) {
                     byte[] fileContents = Files.readAllBytes(file.toPath());
                     sendResponse(outputStream,
@@ -192,7 +191,6 @@ class HttpRequestHandler{
                 }
 
             } else if (requestTarget[1].equals("files") && httpRequest[0].equals("POST")) {
-                System.out.println("here");
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
                 try (var writer = new FileWriter(file)){
