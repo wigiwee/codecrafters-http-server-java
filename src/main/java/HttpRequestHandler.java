@@ -123,11 +123,6 @@ class HttpRequestHandler{
         return headers[i+1];
     }
 
-    public void setRequestTarget(String request){
-        requestTarget= request.split("/");
-        requestTarget[0] = "/";
-    }
-
     public void run(){
         try{
             if(directory != null){
@@ -140,10 +135,8 @@ class HttpRequestHandler{
             String[] httpRequest = line.split(" ",  0);
             System.out.println("[REQUEST] "+line);
             setHeaders(reader);
-            System.out.println(Arrays.toString(headers));
-            setRequestTarget(httpRequest[1]);
             //routing
-            if(requestTarget[1].equals("echo")){
+            if(requestTarget[1].equals("/echo/")){
                 String param = httpRequest[1].substring(6);
                 String headerValue;
                 headerValue= getHeader("Accept-Encoding");
