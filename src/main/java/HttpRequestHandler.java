@@ -190,9 +190,6 @@ class HttpRequestHandler{
             } else if (httpRequest[1].startsWith("/files/") && httpRequest[0].equals("POST")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
-                while(reader.ready()){
-                    line = reader.readLine();
-                }
                 try (var writer = new FileWriter(file)){
                     while (reader.ready()){
                         writer.write(reader.read());
