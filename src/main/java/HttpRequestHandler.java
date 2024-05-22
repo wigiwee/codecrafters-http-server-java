@@ -25,6 +25,7 @@ class HttpRequestHandler{
         } catch (IOException e) {
             return fileContent;
         }
+        
     }
 
     public String getHeader(String name){
@@ -194,7 +195,7 @@ class HttpRequestHandler{
             } else {
                 sendResponse(outputStream, 404, "Not Found");
             }
-            
+
             clientSocket.close();
 
         }catch (IOException e){
