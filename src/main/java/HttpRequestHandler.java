@@ -9,6 +9,8 @@ class HttpRequestHandler{
     String directory;
     String EOL = "\r\n";
     String[] headers= new String[50];
+    String[] requestTarget = new String[5];
+    String method;
 
     public HttpRequestHandler(Socket clientSocket, String directory){
         this.clientSocket = clientSocket;
@@ -30,17 +32,6 @@ class HttpRequestHandler{
             return fileContent;
         }
 
-    }
-
-    public String getHeader(String name){
-        int i = 0;
-        while(!headers[i].equals(name)){
-            i = i+2;
-            if(headers[i] == ""){
-                return headers[i];
-            }
-        }
-        return headers[i+1];
     }
 
     public void sendResponse(OutputStream outputStream, int statusCode, String statusPhrase) throws IOException {
@@ -125,6 +116,22 @@ class HttpRequestHandler{
 
     }
 
+    public String getHeader(String name){
+        int i = 0;
+        while(!headers[i].equals(name)){
+            i = i+2;
+            if(headers[i] == ""){
+                return headers[i];
+            }
+        }
+        return headers[i+1];
+    }
+
+    public void setRequestTarget(String request){
+        requestTarget= request.split("/");
+        requestTarget[0] = "/";
+    }
+
     public void run(){
         try{
             if(directory != null){
@@ -133,14 +140,17 @@ class HttpRequestHandler{
             OutputStream outputStream = clientSocket.getOutputStream();
             InputStream input = clientSocket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+
             String line =reader.readLine();
             String[] httpRequest = line.split(" ",  0);
             System.out.println("[REQUEST] "+line);
             setHeaders(reader);
             System.out.println(Arrays.toString(headers));
+            setRequestTarget(httpRequest[1]);
+            method = httpRequest[0];
             //routing
-            if(httpRequest[1].startsWith("/echo/")){
-                String param = httpRequest[1].substring(6);
+            if(requestTarget[1].equals("echo")){
+                String param = requestTarget[2];
                 String headerValue;
                 headerValue= getHeader("Accept-Encoding");
 
@@ -163,15 +173,15 @@ class HttpRequestHandler{
                     );
                 }
 
-            }else if(httpRequest[1].equals("/")){
+            }else if(requestTarget[0].equals("/")){
                 sendResponse(outputStream, 200, "OK");
 
-            }else if(httpRequest[1].equals("/user-agent")){
+            }else if(requestTarget[1].equals("/user-agent")){
                 sendResponse(outputStream, 200, "OK", new String[]{}, "text/plain",getHeader("User-Agent"));
 
                 //we check whether the file name given in the request is present in out directory,
                 // if it is then we send the file
-            } else if (httpRequest[1].startsWith("/files/") && httpRequest[0].equals("GET")) {
+            } else if (requestTarget[1].equals("files") && method.equals("GET")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
 
@@ -187,7 +197,7 @@ class HttpRequestHandler{
                     sendResponse(outputStream, 404, "Not Found");
                 }
 
-            } else if (httpRequest[1].startsWith("/files/") && httpRequest[0].equals("POST")) {
+            } else if (requestTarget[1].equals("files") && method.equals("POST")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
                 try (var writer = new FileWriter(file)){
