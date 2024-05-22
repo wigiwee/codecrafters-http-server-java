@@ -8,11 +8,14 @@ class HttpRequestHandler{
     Socket clientSocket;
     String directory;
     String EOL = "\r\n";
-    String[] headers= new String[100];
+    String[] headers= new String[50];
 
     public HttpRequestHandler(Socket clientSocket, String directory){
         this.clientSocket = clientSocket;
         this.directory = directory;
+        for (int i = 0; i < headers.length; i++) {
+            headers[i] = "";
+        }
     }
 
     public byte[] gzipCompression(byte[] fileContent){
@@ -33,8 +36,8 @@ class HttpRequestHandler{
         int i = 0;
         while(!headers[i].equals(name)){
             i = i+2;
-            if(headers[i] == null){
-                return null;
+            if(headers[i] == ""){
+                return headers[i];
             }
         }
         return headers[i+1];
@@ -174,7 +177,6 @@ class HttpRequestHandler{
 
                 if(file.exists()) {
                     byte[] fileContents = Files.readAllBytes(file.toPath());
-//                    String fileContentString = new String(fileContents);
                     sendResponse(outputStream,
                             200,
                             "OK",
@@ -188,9 +190,9 @@ class HttpRequestHandler{
             } else if (httpRequest[1].startsWith("/files/") && httpRequest[0].equals("POST")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
-                do{
+                while(reader.ready()){
                     line = reader.readLine();
-                }while (line!= null && !line.isEmpty());
+                }
                 try (var writer = new FileWriter(file)){
                     while (reader.ready()){
                         writer.write(reader.read());
