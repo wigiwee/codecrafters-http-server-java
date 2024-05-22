@@ -10,7 +10,6 @@ class HttpRequestHandler{
     String EOL = "\r\n";
     String[] headers= new String[50];
     String[] requestTarget = new String[5];
-    String method;
 
     public HttpRequestHandler(Socket clientSocket, String directory){
         this.clientSocket = clientSocket;
@@ -147,7 +146,7 @@ class HttpRequestHandler{
             setHeaders(reader);
             System.out.println(Arrays.toString(headers));
             setRequestTarget(httpRequest[1]);
-            method = httpRequest[0];
+            String method = httpRequest[0];
             //routing
             if(requestTarget[1].equals("echo")){
                 String param = requestTarget[2];
