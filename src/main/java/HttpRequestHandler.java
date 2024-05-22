@@ -82,7 +82,7 @@ class HttpRequestHandler{
 
     }
 
-    public void  setHeaders(BufferedReader reader) throws IOException {
+    public void  setHeaders(BufferedReader reader) tGEThrows IOException {
         String[] temp ;
         int i = 0;
         int j;
