@@ -2,6 +2,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class Main {
     public static void main(String[] args) {
@@ -34,7 +36,18 @@ public class Main {
 class HttpRequestHandler{
     Socket clientSocket;
     String directory;
+    public byte[] gzipCompression(byte[] fileContent){
+        try{
+            ByteArrayOutputStream  arrayOutputStream = new ByteArrayOutputStream();
+            GZIPOutputStream gzip = new GZIPOutputStream(arrayOutputStream);
+            gzip.write(fileContent);
+            gzip.finish();
+            return arrayOutputStream.toByteArray();
 
+        } catch (IOException e) {
+            return fileContent;
+        }
+    }
     public HttpRequestHandler(Socket clientSocket, String directory){
         this.clientSocket = clientSocket;
         this.directory = directory;
@@ -73,8 +86,9 @@ class HttpRequestHandler{
                 String response;
 
                 if(value.equals("gzip")){
+                    byte[] encodedFileContent= gzipCompression(param.getBytes());
                     response = "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: "
-                            +param.length()+"\r\n\r\n"+param;
+                            +encodedFileContent.length+"\r\n\r\n"+encodedFileContent;
                 }else {
                     response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: "
                             +param.length()+"\r\n\r\n"+param;
