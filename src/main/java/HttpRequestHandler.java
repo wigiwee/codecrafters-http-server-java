@@ -1,14 +1,13 @@
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.zip.GZIPOutputStream;
 
 class HttpRequestHandler{
     Socket clientSocket;
     String directory;
     String EOL = "\r\n";
-    String[] headers= new String[50];
+    String[] headers= new String[20];
     String[] requestTarget = new String[5];
     public HttpRequestHandler(Socket clientSocket, String directory){
         this.clientSocket = clientSocket;
@@ -142,7 +141,6 @@ class HttpRequestHandler{
             String[] httpRequest = line.split(" ",  0);
             System.out.println("[REQUEST] "+line);
             setHeaders(reader);
-            System.out.println(Arrays.toString(headers));
             setRequestTarget(httpRequest[1]);
             //routing
             if(requestTarget[1].equals("echo")){
@@ -180,7 +178,7 @@ class HttpRequestHandler{
             } else if (requestTarget[1].equals("files") && httpRequest[0].equals("GET")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
-
+                System.out.println("Here");
                 if(file.exists()) {
                     byte[] fileContents = Files.readAllBytes(file.toPath());
                     sendResponse(outputStream,
