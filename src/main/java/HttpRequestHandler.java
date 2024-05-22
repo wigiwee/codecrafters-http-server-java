@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.zip.GZIPOutputStream;
 
 class HttpRequestHandler{
@@ -12,9 +13,7 @@ class HttpRequestHandler{
     public HttpRequestHandler(Socket clientSocket, String directory){
         this.clientSocket = clientSocket;
         this.directory = directory;
-        for (int i = 0; i < headers.length; i++) {
-            headers[i] = "";
-        }
+        Arrays.fill(headers, "");
     }
 
     public byte[] gzipCompression(byte[] fileContent){
@@ -141,10 +140,11 @@ class HttpRequestHandler{
             String[] httpRequest = line.split(" ",  0);
             System.out.println("[REQUEST] "+line);
             setHeaders(reader);
+            System.out.println(Arrays.toString(headers));
             setRequestTarget(httpRequest[1]);
             //routing
             if(requestTarget[1].equals("echo")){
-                String param = requestTarget[2];
+                String param = httpRequest[1].substring(6);
                 String headerValue;
                 headerValue= getHeader("Accept-Encoding");
 
@@ -167,7 +167,7 @@ class HttpRequestHandler{
                     );
                 }
 
-            }else if(httpRequest[0].equals("/") ){
+            }else if(requestTarget[0].equals("/")){
                 sendResponse(outputStream, 200, "OK");
 
             }else if(requestTarget[1].equals("/user-agent")){
@@ -175,9 +175,10 @@ class HttpRequestHandler{
 
                 //we check whether the file name given in the request is present in out directory,
                 // if it is then we send the file
-            } else if (requestTarget[1].equals("files") && httpRequest[0].equals("GET")) {
+            } else if (httpRequest[1].startsWith("/files") && httpRequest[0].equals("GET")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
+
                 if(file.exists()) {
                     byte[] fileContents = Files.readAllBytes(file.toPath());
                     sendResponse(outputStream,
@@ -190,7 +191,7 @@ class HttpRequestHandler{
                     sendResponse(outputStream, 404, "Not Found");
                 }
 
-            } else if (requestTarget[1].equals("files") && httpRequest[0].equals("POST")) {
+            } else if (httpRequest[1].startsWith("/files/") && httpRequest[0].equals("POST")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
                 try (var writer = new FileWriter(file)){
