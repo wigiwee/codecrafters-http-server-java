@@ -87,6 +87,7 @@ class HttpRequestHandler{
 
                 if(value.equals("gzip")){
                     byte[] encodedFileContent= gzipCompression(param.getBytes());
+                    System.out.println(encodedFileContent.length);
                     response = "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: "
                             +encodedFileContent.length+"\r\n\r\n"+encodedFileContent;
                 }else {
