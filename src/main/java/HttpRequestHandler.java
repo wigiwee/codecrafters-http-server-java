@@ -10,7 +10,6 @@ class HttpRequestHandler{
     String EOL = "\r\n";
     String[] headers= new String[50];
     String[] requestTarget = new String[5];
-
     public HttpRequestHandler(Socket clientSocket, String directory){
         this.clientSocket = clientSocket;
         this.directory = directory;
@@ -139,14 +138,12 @@ class HttpRequestHandler{
             OutputStream outputStream = clientSocket.getOutputStream();
             InputStream input = clientSocket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-
             String line =reader.readLine();
             String[] httpRequest = line.split(" ",  0);
             System.out.println("[REQUEST] "+line);
             setHeaders(reader);
             System.out.println(Arrays.toString(headers));
             setRequestTarget(httpRequest[1]);
-            String method = httpRequest[0];
             //routing
             if(requestTarget[1].equals("echo")){
                 String param = requestTarget[2];
@@ -180,7 +177,7 @@ class HttpRequestHandler{
 
                 //we check whether the file name given in the request is present in out directory,
                 // if it is then we send the file
-            } else if (requestTarget[1].equals("files") && method.equals("GET")) {
+            } else if (requestTarget[1].equals("files") && httpRequest[0].equals("GET")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
 
@@ -196,7 +193,7 @@ class HttpRequestHandler{
                     sendResponse(outputStream, 404, "Not Found");
                 }
 
-            } else if (requestTarget[1].equals("files") && method.equals("POST")) {
+            } else if (requestTarget[1].equals("files") && httpRequest[0].equals("POST")) {
                 String filename = httpRequest[1].substring(7);
                 File file = new File(directory, filename);
                 try (var writer = new FileWriter(file)){
