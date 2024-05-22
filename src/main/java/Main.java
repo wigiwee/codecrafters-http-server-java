@@ -56,12 +56,19 @@ class HttpRequestHandler{
                 String param = httpRequest[1].substring(6);
                 String header, value=null;
                 do{
-                    var x = reader.readLine().split(" ", 0);
+                    String[] x = reader.readLine().split(" ", 0);
                     header= x[0];
                     if(header.equals("")){
                         break;
                     }
-                    value = x[1];
+                    int i = 1;
+                    while(i<x.length){
+                        if(x[i].startsWith("gzip")){
+                            value ="gzip";
+                        }
+                        i++;
+                    }
+
                 }while(!header.equals("Accept-Encoding:") );
                 String response;
                 if(value.equals("gzip")){
